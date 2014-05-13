@@ -122,7 +122,6 @@ a:hover {
     font-size: 18px;
     font-weight: bold;
     color: #000000;
-    padding: 0 0 0 4px;
 }
 
 .count {
@@ -236,7 +235,7 @@ a:hover {
     box-sizing: border-box;
     min-height: 56px;
     overflow: hidden;
-    padding: 0 2px 3px 4px;
+    padding: 0 2px 0 4px;
     position: relative;
     background: #FFFFFF;
     border-top: 5px solid #FFFFFF;
@@ -245,14 +244,13 @@ a:hover {
             transition: border-color 150ms;
 }
 
+.article:nth-child(odd) {
+    background-color: #f4f3e8;
+}
+
 .live-mode .article {
     border-color: #EEFFEE;
     background: #EEFFEE;
-}
-
-.article:hover,
-.live-mode .article:hover {
-    background-color: #f4f3e8;
 }
 
 .supporting .article {
@@ -287,7 +285,7 @@ a:hover {
 }
 
 .article_content {
-    margin: 1px 130px 0 85px;
+    margin: 2px 130px 0 85px;
     line-height: 0;
 }
 
@@ -301,7 +299,6 @@ a:hover {
     line-height: 16px;
     color: #000000;
     cursor: move;
-    margin: 1px 0 0 0;
     text-decoration: none;
 }
 
@@ -346,7 +343,7 @@ a:hover {
     word-break: break-all;
     word-wrap: break-word;
     height: 15px;
-    line-height: 16px;
+    line-height: 14px;
     padding-right: 50px;
     font-size: 12px;
     color: #999999;
@@ -524,11 +521,16 @@ button {
 }
 
 .group-name {
-    padding: 5px 0 0px 4px;
-    font-size: 10px;
-    line-height: 12px;
-    color: #666666;
+    padding: 5px 0 0px 5px;
+    font-size: 12px;
+    line-height: 10px;
     text-transform: uppercase;
+    border-top: solid 1px #f4f3e8;
+    width: 75px;
+}
+
+.group-name:first-child {
+    border: 0;
 }
 
 .search-form {
@@ -649,6 +651,7 @@ button {
     background: #dbd8c9;
     font-size: 12px;
     line-height: 20px;
+    text-align: center;
     color: #FFFFFF;
     border-radius: 2px;
     border: 0;
@@ -683,6 +686,9 @@ button {
 }
 
 .tools .tool:first-child {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 75px;
     background: #3279F1;
 }
 
@@ -698,9 +704,9 @@ button {
 }
 
 .tool--small {
-    background: inherit;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    background: inherit;
     padding: 0 4px;
     margin: 0 1px 0 3px;
 }
