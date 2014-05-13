@@ -5,6 +5,7 @@ import org.joda.time.{ DateTime, DateMidnight }
 import model._
 import views.MatchStatus
 import com.gu.openplatform.contentapi.model.{Content => ApiContent}
+import conf.Switches.WorldCupWallchartEmbedSwitch
 
 trait Football extends Collections {
 
@@ -119,6 +120,7 @@ trait Football extends Collections {
       else t.name
     }
 
+    WorldCupWallchartEmbedSwitch.isSwitchedOn  // ghost team IDs correct for world-cup 2014, double check for other tournaments
     // PA knockout placeholder teams
     // e.g. "Winner Group A", "Wnr Gp G/R-Up Gp H", "Loser SF1"
     private val ghostTeamIds = List(

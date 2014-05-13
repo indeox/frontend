@@ -5,6 +5,7 @@ import feed.Competitions
 import model.Competition
 import pa._
 import implicits.Football._
+import conf.Switches.WorldCupWallchartEmbedSwitch
 
 
 trait CompetitionStage {
@@ -79,6 +80,10 @@ case class KnockoutSpider(matches: List[FootballMatch], rounds: List[Round], mat
   }
 }
 object KnockoutSpider {
+
+  WorldCupWallchartEmbedSwitch.isSwitchedOn  // world-cup 2014 dates hard-coded below, remove when WC 2014 is removed
+
+  // providing an ordering will enable the spider knockout display for the competition
   val orderings: Map[String, List[DateTime]] = Map(
     // world cup 2014
     "700" -> List(
