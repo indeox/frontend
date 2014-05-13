@@ -62,7 +62,7 @@
     }
 }
 
-@mixin tone-head-background($tone, $colour, $accentColour, $textColour, $commentIcon) {
+@mixin tone-head-background($tone, $colour, $accentColour, $textColour) {
     .tone-#{$tone}.tone-#{$tone}--article {
 
         .article__head__comment-count {
