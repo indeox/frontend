@@ -9,7 +9,7 @@
         </span>
     </h2>
     <div class="article-wrapper monocolumn-wrapper tone-@VisualTone(article) tone-@VisualTone(article)--article">
-        <article id="article" class="article @if(article.isLive){is-live} @if(article.isAdvertisementFeature){article--advertisement-feature}"
+        <article id="article" class="article @if(article.isLive){is-live} @if(article.isAdvertisementFeature){article--advertisement-feature} @if(article.contributors.length == 1){article--single-contributor}"
                  itemprop="mainContentOfPage" itemscope itemtype="@article.schemaType" role="main">
             <div class="article__inner article__inner--head">
                 <header class="article__head">
@@ -23,7 +23,10 @@
                         }
 
                         <h1 itemprop="headline" class="article__headline js-score">
-                            @Html(article.headline)
+                            <div class="headline__title">
+                                @Html(article.headline)
+                            </div>
+
                             @if(article.isComment && article.contributors.length == 1) {
                                 <div class="headline__author">
                                 @article.byline.map{ text =>

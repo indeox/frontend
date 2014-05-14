@@ -6,3 +6,93 @@
 @include tone-head(live, $c-neutral1, $c-liveAccent);
 @include tone-head-background(feature, $c-featureDefault, $c-featureAccent2, #fff);
 @include tone-head-background(comment, $c-commentAccent, $c-commentAccent2, #333);
+
+
+// Exceptions to override mixins
+
+.tone-comment.tone-comment--article {
+
+    .article--single-contributor { // scoped styling for putting the author/pic byline into the tone head
+
+        .byline,
+        .article__meta-container .byline-img {
+            display: none;
+        }
+
+        .headline__title {
+            @include mq($from:mobileLandscape, $to: tablet) {
+                padding-right: gs-span(2);
+            }
+            @include mq($from:tablet, $to: rightCol) {
+                padding-right: gs-span(3);
+            }
+        }
+
+        .headline__author {
+            @include mq($to: mobileLandscape) {
+                height: 150px;
+                padding-right: gs-span(2);
+            }
+            @include mq($from: mobileLandscape, $to: tablet) {
+                padding-right: gs-span(2);
+                padding-bottom: $gs-baseline*3;
+            }
+        }
+
+        .article__head .byline-img {
+            position: absolute;
+            bottom: 0;
+            z-index: 1;
+
+            .byline-img__img {
+                height: 100%;
+            }
+
+            @include mq($to: rightCol) {
+                height: 150px;
+                right: -$gs-gutter/2;
+            }
+            @include mq($from: tablet) {
+                height: 120%;
+            }
+            @include mq($from: rightCol) {
+                left: 95%;
+            }
+        }
+
+        .article__head__comment-count--headline {
+            position: absolute;
+            bottom: 0;
+        }
+
+    }
+
+    .article__headline {
+        @include mq($to: tablet) {
+            padding-bottom: 0;
+        }
+    }
+
+    .headline__author,
+    .headline__author a {
+        color: $c-neutral2;
+    }
+
+    .headline__author a:hover {
+        text-decoration: none;
+        border-bottom: 2px solid;
+    }
+
+    .article__standfirst a {
+        &.u-underline {
+            border-bottom-color: darken($c-commentAccent, 10%);
+            &:hover {
+                border-bottom-color: #333;
+            }
+        }
+    }
+
+    .article__standfirst .bullet:before {
+        background-color: darken($c-commentAccent, 15%);
+    }
+}

@@ -176,7 +176,7 @@
         }
 
         .article__standfirst a {
-            color: #fff;
+            color: $textColour;
             &.u-underline {
                 border-bottom-color: lighten($accentColour, 18);
                 &:hover {
