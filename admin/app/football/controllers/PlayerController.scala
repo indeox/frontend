@@ -47,7 +47,7 @@ object PlayerController extends Controller with ExecutionContexts with GetPaClie
           playerStats <- client.playerStats(playerId, competition.startDate, DateMidnight.now(), teamId, competitionId)
           playerAppearances <- client.appearances(playerId, competition.startDate, DateMidnight.now(), teamId, competitionId)
         } yield {
-          val result = renderPlayerCard(cardType, playerId, playerProfile, playerStats, playerAppearances)
+          val result = renderPlayerCard(cardType, playerId, playerProfile, playerStats, playerAppearances, teamId)
           Cors(NoCache(result))
         }
       }
@@ -61,18 +61,19 @@ object PlayerController extends Controller with ExecutionContexts with GetPaClie
       playerStats <- client.playerStats(playerId, startDate, DateMidnight.now(), teamId)
       playerAppearances <- client.appearances(playerId, startDate, DateMidnight.now(), teamId)
     } yield {
-      val result = renderPlayerCard(cardType, playerId, playerProfile, playerStats, playerAppearances)
+      val result = renderPlayerCard(cardType, playerId, playerProfile, playerStats, playerAppearances, teamId)
       Cors(NoCache(result))
     }
   }
 
-  private def renderPlayerCard(cardType: String, playerId: String, playerProfile: PlayerProfile, playerStats: StatsSummary, playerAppearances: PlayerAppearances) = {
+  private def renderPlayerCard(cardType: String, playerId: String, playerProfile: PlayerProfile, playerStats: StatsSummary, playerAppearances: PlayerAppearances, teamId: String) = {
     cardType match {
-      case "attack" => Ok(views.html.football.player.cards.attack(playerId, playerProfile, playerStats, playerAppearances))
-      case "assist" => Ok(views.html.football.player.cards.assist(playerId, playerProfile, playerStats, playerAppearances))
-      case "discipline" => Ok(views.html.football.player.cards.discipline(playerId, playerProfile, playerStats, playerAppearances))
-      case "defence" => Ok(views.html.football.player.cards.defence(playerId, playerProfile, playerStats, playerAppearances))
-      case "goalkeeper" => Ok(views.html.football.player.cards.goalkeeper(playerId, playerProfile, playerStats, playerAppearances))
+      case "attack" => Ok(views.html.football.player.cards.attack(playerId, playerProfile, playerStats, playerAppearances, teamId))
+      case "assist" => Ok(views.html.football.player.cards.assist(playerId, playerProfile, playerStats, playerAppearances, teamId))
+      case "discipline" => Ok(views.html.football.player.cards.discipline(playerId, playerProfile, playerStats, playerAppearances, teamId))
+      case "defence" => Ok(views.html.football.player.cards.defence(playerId, playerProfile, playerStats, playerAppearances, teamId))
+      case "goalkeeper" => Ok(views.html.football.player.cards.goalkeeper(playerId, playerProfile, playerStats, playerAppearances, teamId))
+      case "basic" => Ok(views.html.football.player.cards.basic(playerId, playerProfile, playerStats, playerAppearances, teamId))
       case _ => NotFound(views.html.football.error("Unknown card type"))
     }
   }

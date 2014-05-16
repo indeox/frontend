@@ -2,7 +2,7 @@
 
 @views.html.football.main("Player card") {
 <hgroup class="page-header">
-    <h1>Player card - discipline</h1>
+    <h1>Player card - attack</h1>
 </hgroup>
 
 <div class="player-card-container">
@@ -21,14 +21,8 @@
             <dt class="player-card__stat-name">Appearances</dt>
             <dd class="player-card__stat-value">@playerAppearances.total.appearances</dd>
 
-            <dt class="player-card__stat-name">Fouls Committed</dt>
-            <dd class="player-card__stat-value">@playerStats.discipline.foulsCommitted.total</dd>
-
-            <dt class="player-card__stat-name">Bookings</dt>
-            <dd class="player-card__stat-value">@playerStats.discipline.bookings.total</dd>
-
-            <dt class="player-card__stat-name">Dismissals</dt>
-            <dd class="player-card__stat-value">@playerStats.discipline.dismissals.total</dd>
+            <dt class="player-card__stat-name">Goals</dt>
+            <dd class="player-card__stat-value">@playerStats.offence.goals.total</dd>
         </dl>
     </div>
 </div>

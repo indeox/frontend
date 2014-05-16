@@ -1,4 +1,4 @@
-@(playerId: String, player: pa.PlayerProfile, playerStats: pa.StatsSummary, playerAppearances: pa.PlayerAppearances)
+@(playerId: String, player: pa.PlayerProfile, playerStats: pa.StatsSummary, playerAppearances: pa.PlayerAppearances, teamId: String)
 
 @views.html.football.main("Player card") {
 <hgroup class="page-header">
@@ -11,6 +11,9 @@
             <img class="player-card__image" itemprop="image" src="@Configuration.staticSport.path/football/player-images/100/@{playerId}.jpg" alt="Photo of @player.fullName" />
         </div>
         <div class="player-card__player">
+            <div class="team__crest__img-container">
+                <span class="team__crest__img" style="background-image: url(http://sport.guim.co.uk/football/crests/120/@{teamId}.png)"></span>
+            </div>
             <div class="player-card__position" itemprop="jobTitle">@player.position.map(_root_.football.formats.PaPlayer.position)</div>
             <div class="player-card__name" itemprop="name">@player.fullName</div>
         </div>
