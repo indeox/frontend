@@ -141,6 +141,7 @@ Loader.prototype.ready = function() {
 };
 
 Loader.prototype.loadComments = function(args) {
+    args = args || {};
     var self = this,
         commentsContainer = this.getElem('commentsContainer'),
         commentsElem = this.getElem('comments'),
@@ -162,11 +163,11 @@ Loader.prototype.loadComments = function(args) {
     }
 
     this.comments = new Comments(this.context, this.mediator, {
-        initialShow: commentId ? 10 : args.amount,
         discussionId: this.getDiscussionId(),
         user: this.user,
         commentId: commentId ? commentId : null,
-        order: this.getDiscussionClosed() ? 'oldest' : 'newest'
+        order: this.getDiscussionClosed() ? 'oldest' : 'newest',
+        state: this.topComments.topCommentsAmount > 0 ? 'shut' : 'partial'
     });
 
     // Doing this makes sure there is only one redraw
