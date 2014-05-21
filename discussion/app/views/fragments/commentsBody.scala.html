@@ -54,13 +54,22 @@
             <span class="d-discussion__show-more-text">Show comments</span>
         </a>
     </div>
-
-    <div class="show-more__container show-more__container--older">
-        @page.pagination.map{ paginate => @fragments.pagination(page, paginate) }
+    
+    <div class="d-discussion__pager__container" >
+      <div class="d-discussion__pager">
+        @page.pagination.map{ paginate => @fragments.pagination(page, paginate, Some("d-discussion__page-link")) }
+      </div>
     </div>
 
     <div class="show-more__container show-more__container--featured u-h">
-        @page.pagination.map{ paginate => @fragments.pagination(page, paginate) }
+        <a class="js-show-more-top-comments d-discussion__show-more d-discussion__show-more--featured"
+            data-link-name="Show more featured comments"
+            data-remove="true"
+            href="@LinkTo{/discussion@if(page.orderBy == "oldest"){/oldest}/@page.id?page=1}"
+            title="Show more featured comments">
+            <span class="d-discussion__show-more-button"><i class="i i-plus-white-med"></i></span>
+            <span class="d-discussion__show-more-text">Show more featured comments</span>
+        </a>
     </div>
 
     <script type="text/template" id="tmpl-comment-box">@fragments.commentBox()</script>

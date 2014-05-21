@@ -70,6 +70,9 @@ Comments.prototype.classes = {
     comments: 'd-thread--top-level',
     topLevelComment: 'd-comment--top-level',
     showMore: 'd-discussion__show-more',
+    pageLink: 'd-discussion__page-link',
+    pager: 'd-discussion__pager',
+    pagerContainer: 'd-discussion__pager__container',
     showMoreNewerContainer: 'show-more__container--newer',
     showMoreOlderContainer: 'show-more__container--older',
     showMoreHiddenContainer: 'show-more__container--hidden',
@@ -172,6 +175,7 @@ Comments.prototype.prerender = function() {
 Comments.prototype.ready = function() {
     this.on('click', this.getClass('showReplies'), this.getMoreReplies);
     this.on('click', this.getClass('showMore'), this.loadMore);
+    this.on('click', this.getClass('pageLink'), this.pageLink);
     this.on('click', this.getClass('showHidden'), this.showHiddenComments);
     this.on('change', this.getClass('orderControl'), this.setOrder);
     this.mediator.on('discussion:comment:recommend:fail', this.recommendFail.bind(this));
@@ -323,6 +327,15 @@ Comments.prototype.loadMore = function(e) {
 };
 
 /**
+ * @param {Event} e
+ */
+Comments.prototype.pageLink = function(e) {
+    e.preventDefault();
+    var page = parseInt(e.currentTarget.getAttribute('data-page'), 10);
+    return this.gotoPage(page);
+};
+
+/**
  * @param {Object.<string.*>}
  * options {
  *   page: {number},
@@ -368,6 +381,7 @@ Comments.prototype.renderComments = function(position, resp) {
 
     replaceButton('showMoreOlder');
     replaceButton('showMoreNewer');
+    replaceButton('pager'); // won't work yet because both old and new 'button' != 0
 
     // Stop duplication in new comments section
     qwery(this.getClass('comment'), this.getElem('newComments')).forEach(function(comment) {

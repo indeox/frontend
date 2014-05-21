@@ -23,7 +23,7 @@ case class CommentPage(
   lazy val hasMore: Boolean = currentPage < pages
 
 
-  
+
   override lazy val url = s"/discussion/$orderBy$id"
 
   override val pagination = Some(1) filter (pages > _) map (_ => Pagination(currentPage, pages, commentCount))
