@@ -149,7 +149,6 @@ Loader.prototype.loadComments = function(args) {
         commentId = this.getCommentIdFromHash(),
         showComments = args.showLoader || commentId || window.location.hash === '#comments';
 
-
     if (args.showLoader) {
         // Comments are being loaded in the no-top-comments-available context
         bonzo(commentsContainer).removeClass('u-h');
@@ -179,10 +178,10 @@ Loader.prototype.loadComments = function(args) {
 
             if (showComments) {
                 // Comments are being loaded in the no-top-comments-available context
-                bonzo(self.getElem('joinDiscussion')).remove();
-                bonzo([self.comments.getElem('showMore'), self.comments.getElem('header')]).removeClass('u-h');
-            } else {
-                bonzo(self.comments.getElem('showMore')).addClass('u-h');
+                bonzo(self.getElem('joinDiscussion')).addClass('u-h');
+                bonzo(self.comments.getElem('header')).removeClass('u-h');
+                self.comments.removeState('shut');
+                self.comments.removeState('partial');
             }
 
             self.on('click', self.getElem('joinDiscussion'), function (e) {
@@ -299,7 +298,6 @@ Loader.prototype.commentPosted = function () {
 
 /* Configure DOM for viewing of comments once some have been shown */
 Loader.prototype.cleanUpOnShowComments = function () {
-    console.log('Here');
     bonzo(this.comments.getElem('header')).removeClass('u-h');
     bonzo(this.getElem('joinDiscussion')).addClass('u-h');
 };

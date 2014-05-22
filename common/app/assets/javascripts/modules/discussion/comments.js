@@ -4,6 +4,7 @@ define([
     'qwery',
     'bean',
     'common/utils/ajax',
+    'common/utils/scroller',
     'common/modules/component',
     'common/modules/userPrefs',
     'common/modules/identity/api',
@@ -16,6 +17,7 @@ define([
     qwery,
     bean,
     ajax,
+    scroller,
     Component,
     userPrefs,
     Id,
@@ -65,9 +67,7 @@ Comments.prototype.classes = {
     container: 'discussion__comments__container',
     comments: 'd-thread--top-level',
     topLevelComment: 'd-comment--top-level',
-    pageLink: 'd-discussion__page-link',
-    pager: 'd-discussion__pager',
-    pagerContainer: 'd-discussion__pager__container',
+    changePage: 'js-discussion-change-page',
     showMoreHiddenContainer: 'show-more__container--hidden',
     showMoreLoading: 'd-discussion__show-more-loading',
     reply: 'd-comment--response',
@@ -149,8 +149,7 @@ Comments.prototype.prerender = function() {
 /** @override */
 Comments.prototype.ready = function() {
     this.on('click', this.getClass('showReplies'), this.getMoreReplies);
-    this.on('click', this.getClass('showMore'), this.loadMore);
-    this.on('click', this.getClass('pageLink'), this.pageLink);
+    this.on('click', this.getClass('changePage'), this.changePage);
     this.on('click', this.getClass('showHidden'), this.showHiddenComments);
     this.on('change', this.getClass('orderControl'), this.setOrder);
     this.mediator.on('discussion:comment:recommend:fail', this.recommendFail.bind(this));
@@ -163,11 +162,9 @@ Comments.prototype.ready = function() {
 
     if (this.options.commentId) {
         var comment = $('#comment-'+ this.options.commentId);
-
         if (comment.attr('hidden')) {
-            bean.fire($(this.getClass('showReplies'), comment.parent())[0], 'click'); // Bonzo can be rubbish (without Ender)
+            bean.fire($(this.getClass('showReplies'), comment.parent())[0], 'click');
         }
-
         window.location.replace('#comment-'+ this.options.commentId);
     }
 
@@ -252,8 +249,7 @@ Comments.prototype.gotoComment = function(id) {
     }
 
     return this.fetchComments({
-        comment: id,
-        position: 'replace'
+        comment: id
     }).then(function() {
         window.location.replace('#comment-'+ id);
     }.bind(this));
@@ -263,41 +259,20 @@ Comments.prototype.gotoComment = function(id) {
  * @param {number} page
  */
 Comments.prototype.gotoPage = function(page) {
+    this.loading();
+    scroller.scrollToElement(qwery('.discussion__comments__container .discussion__heading'), 100);
+
     return this.fetchComments({
-        page: page,
-        position: 'replace'
-    });
+        page: page
+    }).then(function() {
+        this.loaded();
+    }.bind(this));
 };
 
 /**
  * @param {Event} e
  */
-Comments.prototype.loadMore = function(e) {
-    e.preventDefault();
-    var button = e.currentTarget,
-        age = button.getAttribute('data-age'),
-        page = parseInt(button.getAttribute('data-page'), 10);
-
-    if (button.getAttribute('data-disabled')) {
-        return false;
-    }
-
-    var $button = bonzo(button),
-        $container = $button.parent();
-    $button.remove();
-    var $loadingElem = bonzo.create('<span class="' + this.getClass('showMoreLoading',true) + '">Loading…</span>');
-    $container.empty().append($loadingElem);
-
-    return this.fetchComments({
-        page: page,
-        position: age === 'newer' ? 'prepend' : 'append'
-    });
-};
-
-/**
- * @param {Event} e
- */
-Comments.prototype.pageLink = function(e) {
+Comments.prototype.changePage = function(e) {
     e.preventDefault();
     var page = parseInt(e.currentTarget.getAttribute('data-page'), 10);
     return this.gotoPage(page);
@@ -307,8 +282,7 @@ Comments.prototype.pageLink = function(e) {
  * @param {Object.<string.*>}
  * options {
  *   page: {number},
- *   comment: {number},
- *   position: {string} append|prepend|replace
+ *   comment: {number}
  * }
  */
 Comments.prototype.fetchComments = function(options) {
@@ -322,31 +296,15 @@ Comments.prototype.fetchComments = function(options) {
         type: 'json',
         method: 'get',
         crossOrigin: true
-    }).then(this.renderComments.bind(this, options.position));
+    }).then(this.renderComments.bind(this));
 };
 
 /**
  * @param {Object} resp
- * @param {String} position append|prepend|replace
  */
-Comments.prototype.renderComments = function(position, resp) {
+Comments.prototype.renderComments = function(resp) {
     var html = bonzo.create(resp.html),
         comments = qwery(this.getClass('jsContent'), html);
-
-    var replaceButton = function(name) {
-        var newButton = qwery(this.getClass(name), html),
-            currentButton = qwery(this.getClass(name), this.elem),
-            container = this.getElem(name + 'Container');
-        $(this.getClass('showMoreLoading'), container).remove(); // remove loading text span
-
-        if (newButton.length === 0) {
-            bonzo(container).addClass('u-h');
-        } else if (currentButton.length === 0) {
-            bonzo(container).append(newButton);
-        }
-    }.bind(this);
-
-    replaceButton('pager');
 
     // Stop duplication in new comments section
     qwery(this.getClass('comment'), this.getElem('newComments')).forEach(function(comment) {
@@ -356,20 +314,8 @@ Comments.prototype.renderComments = function(position, resp) {
         }
     });
 
-    if (position === 'replace') {
-        bonzo(this.getElem('comments')).empty().append(comments);
-    } else {
-        bonzo(this.getElem('comments'))[position](comments);
-    }
+    $(this.getClass('jsContent'), this.elem).replaceWith(comments);
     this.addMoreRepliesButtons(comments);
-
-    // Dealing with where new comments are posted
-    //TODO TODO
-    if (this.options.order === 'oldest') {
-        $(this.getElem('newComments')).insertAfter($(this.getElem('showMoreOlderContainer')));
-    } else {
-        $(this.getElem('newComments')).insertBefore($(this.getElem('showMoreNewerContainer')));
-    }
 
     if (!this.isReadOnly()) {
         RecommendComments.init(this.context);
@@ -396,12 +342,12 @@ Comments.prototype.addMoreRepliesButtons = function (comments) {
 
     comments = comments || this.topLevelComments;
     comments.forEach(function(elem) {
-        var replies = parseInt(elem.getAttribute('data-comment-replies'), 10);
-        var rendered_replies = qwery(self.getClass('reply'), elem);
+        var replies = parseInt(elem.getAttribute('data-comment-replies'), 10),
+            renderedReplies = qwery(self.getClass('reply'), elem);
 
-        if (rendered_replies.length < replies) {
+        if (renderedReplies.length < replies) {
 
-            var numHiddenReplies = replies - rendered_replies.length;
+            var numHiddenReplies = replies - renderedReplies.length;
 
             var showButton = '';
             showButton += '<li class="' + self.getClass('showReplies', true) + '" ';
@@ -505,7 +451,7 @@ Comments.prototype.addComment = function(comment, focus, parent) {
 
     // Stupid hack. Will rearchitect.
     if (!parent) {
-        bonzo(this.getElem('newComments')).prepend(commentElem);
+        $(this.getClass('newComments'), this.elem).prepend(commentElem);
     } else {
         $commentElem.removeClass(this.getClass('topLevelComment', true));
         $commentElem.addClass(this.getClass('reply', true));
@@ -584,13 +530,19 @@ Comments.prototype.showDiscussion = function() {
 };
 
 Comments.prototype.loading = function() {
-    $(this.getElem('loader')).removeClass('u-h');
-    $(this.getElem('comments')).addClass('u-h');
+    var $content = $(this.getClass('jsContent'), this.elem);
+    $(this.getClass('loader'), this.elem).removeClass('u-h').css({
+        height: $content.offset().height
+    });
+    $content.addClass('u-h');
 };
 
 Comments.prototype.loaded = function() {
-    $(this.getElem('loader')).addClass('u-h');
-    $(this.getElem('comments')).removeClass('u-h');
+    var $content = $(this.getClass('jsContent'), this.elem);
+    $(this.getClass('loader'), this.elem).addClass('u-h').css({
+        height: 'auto'
+    });
+    $content.removeClass('u-h');
 };
 
 /**
@@ -609,8 +561,7 @@ Comments.prototype.setOrder = function(e) {
     userPrefs.set('discussion.order', newWorldOrder);
 
     return this.fetchComments({
-        page: 1,
-        position: 'replace'
+        page: 1
     }).then(function() {
         this.loaded();
     }.bind(this));

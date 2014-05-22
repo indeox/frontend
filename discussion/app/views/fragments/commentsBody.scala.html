@@ -18,29 +18,33 @@
         <div class="d-discussion__meta d-dicussion__meta--sorting d-meta-item">
             Comments sorted
             <select class="d-discussion__order-control">
-                <option value="oldest"@if(page.orderBy == "oldest"){ selected="selected"}>oldest</option>
-                <option value="newest"@if(page.orderBy == "newest"){ selected="selected"}>newest</option>
+                <option value="oldest" @if(page.orderBy == "oldest"){selected="selected"}>oldest</option>
+                <option value="newest" @if(page.orderBy == "newest"){selected="selected"}>newest</option>
             </select>
             first.
         </div>
     </div>
 
-    <div class="js-new-comments"></div>
-
     <div class="preload-msg d-discussion__loader u-h">Loading comments…<div class="is-updating"></div></div>
-
     <div class="discussion-content js-discussion-content">
+        @if(!isTopComments){
+            <div class="d-discussion__pagination">
+                @page.pagination.map{ paginate => @fragments.pagination(page, paginate, Some("js-discussion-change-page")) }
+            </div>
+        }
+
+        @if(page.orderBy == "newest"){<div class="js-new-comments"></div>}
         <ul class="d-thread d-thread--top-level">
             @page.comments.map{ comment =>
                 @fragments.comment(comment, page.isClosedForRecommendation, false, isTopComments)
             }
             <li class="d-image-fade u-h"></li>
         </ul>
+        @if(page.orderBy == "oldest"){<div class="js-new-comments"></div>}
+
         @if(!isTopComments){
-            <div class="d-discussion__pager__container">
-                <div class="d-discussion__pager">
-                    @page.pagination.map{ paginate => @fragments.pagination(page, paginate, Some("d-discussion__page-link")) }
-                </div>
+            <div class="d-discussion__pagination">
+                @page.pagination.map{ paginate => @fragments.pagination(page, paginate, Some("js-discussion-change-page")) }
             </div>
         }
     </div>
