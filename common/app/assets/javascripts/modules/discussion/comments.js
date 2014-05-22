@@ -44,14 +44,9 @@ var Comments = function(context, mediator, options) {
         this.options.order = userPrefs.get('discussion.order');
     }
 
-
-    if (this.options.commentId) {
-        this.endpoint = '/discussion/comment-permalink/' + this.options.order + '/' + this.options.commentId + '.json';
-    }
-
-    else {
-        this.endpoint = '/discussion/' + this.options.order + this.options.discussionId + '.json';
-    }
+    this.endpoint = this.options.commentId ?
+        '/discussion/comment-permalink/' + this.options.order + '/' + this.options.commentId + '.json'
+        :this.endpoint = '/discussion/' + this.options.order + this.options.discussionId + '.json';
 };
 Component.define(Comments);
 
@@ -70,15 +65,11 @@ Comments.prototype.classes = {
     container: 'discussion__comments__container',
     comments: 'd-thread--top-level',
     topLevelComment: 'd-comment--top-level',
-    showMore: 'd-discussion__show-more',
     pageLink: 'd-discussion__page-link',
     pager: 'd-discussion__pager',
     pagerContainer: 'd-discussion__pager__container',
     showMoreHiddenContainer: 'show-more__container--hidden',
-    showMoreNewer: 'd-discussion__show-more--newer',
-    showMoreOlder: 'd-discussion__show-more--older',
     showMoreLoading: 'd-discussion__show-more-loading',
-    showHidden: 'd-discussion__show-hidden',
     reply: 'd-comment--response',
     showReplies: 'd-show-more-replies',
     header: 'd-discussion__header',
@@ -151,7 +142,7 @@ Comments.prototype.prerender = function() {
     }
 
     if (this.options.state) {
-        this.setState('partial');
+        this.setState(this.options.state);
     }
 };
 
@@ -393,6 +384,7 @@ Comments.prototype.renderComments = function(position, resp) {
 Comments.prototype.showHiddenComments = function(e) {
     if (e) { e.preventDefault(); }
     this.removeState('shut');
+    this.removeState('partial');
     this.emit('first-load');
 };
 

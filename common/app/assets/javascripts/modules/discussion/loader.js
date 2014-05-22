@@ -299,7 +299,8 @@ Loader.prototype.commentPosted = function () {
 
 /* Configure DOM for viewing of comments once some have been shown */
 Loader.prototype.cleanUpOnShowComments = function () {
-    bonzo([this.comments.getElem('showMore'), this.comments.getElem('header')]).removeClass('u-h');
+    console.log('Here');
+    bonzo(this.comments.getElem('header')).removeClass('u-h');
     bonzo(this.getElem('joinDiscussion')).addClass('u-h');
 };
 

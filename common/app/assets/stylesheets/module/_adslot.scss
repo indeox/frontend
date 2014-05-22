@@ -1,6 +1,5 @@
 .ad-slot--dfp {
     width: 100%;
-    overflow-x: hidden;
     text-align: center;
     min-height: 56px;
     // For expandables
@@ -46,10 +45,7 @@
         text-align: left;
     }
 }
-.mpu-context {
-    // Provides context to sticky positioned blocks
-    height: 100%;
-}
+
 .ad-slot--container-inline {
     min-height: 50px;
     @include box-sizing(border-box);
@@ -170,7 +166,7 @@
         overflow: hidden;
 
         @include mq(leftCol) {
-            .article__meta-container--no-byline & {
+            .content__meta-container--no-byline & {
                 @include rem((
                     padding-top: $gs-baseline / 3
                 ));
@@ -217,7 +213,7 @@
         @include clearfix;
         position: relative;
         min-height: 90px;
-        border-top: none;
+        border-top: 0;
         z-index: 99;
         border-bottom-width: 0;
 
