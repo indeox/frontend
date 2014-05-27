@@ -1,13 +1,15 @@
 define([
     'bonzo',
-    'qwery'
+    'qwery',
+    'common/utils/context'
 ], function(
     bonzo,
-    qwery
+    qwery,
+    context
 ) {
 
-function $(selector, context) {
-    return bonzo(qwery(selector, context));
+function $(s, c) {
+    return (typeof s === 'string') ? bonzo(qwery(s, c||context())) : bonzo(s, c||context());
 }
 $.create = function(s) {
     return bonzo(bonzo.create(s));
