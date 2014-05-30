@@ -1,21 +1,39 @@
 .content {
     @include rem((
-        margin-bottom: $gs-baseline*3.5
+        padding-top: $gs-row-height*.5,
+        padding-bottom: $gs-baseline*3.5
     ));
     @include fs-bodyCopy(3);
+
+    &:after { // clearfix
+        content: '';
+        display: block;
+        clear: both;
+    }
+}
+
+.content .gs-container,
+.content-footer .gs-container {
+    // scoped style for now so this only applies to refactored pages
+    // this padding has historically been added to all child elements
+    // taking it off child elements and moving it here for DRY.   
+    // the intention is to move this to the global .gs-container definition 
+    // which requires the padding to be removed from all child elements
+    @include box-sizing(border-box);
+    @include rem((
+        padding: 0 $gs-gutter/2
+    ));
+    @include mq(mobileLandscape) {
+        @include rem((
+            padding: 0 $gs-gutter
+        ));
+    }
+
 }
 
 .content__main-column {
     position: relative;
 
-    @include rem((
-        margin: 0 $gs-gutter/2
-    ));
-    @include mq($from: mobileLandscape) {
-        @include rem((
-            margin: 0 $gs-gutter
-        ));
-    }
     @include mq($from: tablet) {
         @include rem((
             max-width: 620px
@@ -24,18 +42,18 @@
     }
     @include mq($from: rightCol) {
         @include rem((
-            margin-left: $gs-gutter,
-            padding-right: gs-span(4) + $gs-gutter*2
+            margin-left: 0,
+            margin-right: gs-span(4) + $gs-gutter
         ));
     }
     @include mq($from: leftCol) {
         @include rem((
-            margin-left: gs-span(2) + $gs-gutter*2
+            margin-left: gs-span(2) + $gs-gutter
         ));
     }
     @include mq($from: wide) {
         @include rem((
-            margin-left: gs-span(3) + $gs-gutter*2
+            margin-left: gs-span(3) + $gs-gutter
         ));
     }
 
@@ -43,14 +61,11 @@
     &.content__main-column--gallery,
     &.content__main-column--wide {
         @include mq(rightCol) {
-            @include rem((
-                padding-right: $gs-gutter
-            ));
             max-width: none;
         }
         @include mq(wide) {
             @include rem((
-                padding-right: 100px
+                margin-right: gs-span(1) + $gs-gutter
             ));
         }
     }
@@ -61,6 +76,7 @@
     top: 0;
     right: 0;
     height: 100%;
+    overflow: hidden; // quick hackfix for overflowing right hand components
     @include rem((
         margin-right: $gs-gutter
     ));
@@ -77,8 +93,7 @@
 .content__head__border-top {
     border-top: 1px dotted $c-neutral5;
     @include rem((
-        height: $gs-baseline/2,
-        margin: 0 $gs-gutter
+        height: $gs-baseline/2
     ));
 
     @include mq($to: tablet) {
@@ -131,6 +146,8 @@
 .content__section {
     @include fs-header(3);
     @include box-sizing(border-box);
+    position: relative;
+    z-index: 1; // bring-to-front fix to make it clickable
     @include rem((
         padding-bottom: $gs-baseline
     ));
@@ -150,12 +167,14 @@
     @include mq($from: leftCol) {
         float: left;
         @include rem((
-            margin-left: -(gs-span(2) + $gs-gutter)
+            margin-left: -(gs-span(2) + $gs-gutter),
+            width: gs-span(2)
         ));
     }
     @include mq($from: wide) {
         @include rem((
-            margin-left: -(gs-span(3) + $gs-gutter)
+            margin-left: -(gs-span(3) + $gs-gutter),
+            width: gs-span(3)
         ));
     }
     @include mq($from: leftCol, $to: wide) {
@@ -275,6 +294,9 @@
     color: $c-neutral2;
     @include box-sizing(border-box);
     @include fs-data(2);
+    @include rem((
+        padding-top: $gs-baseline/4
+    ));
 
     i {
         position: relative;
@@ -287,13 +309,6 @@
         ));
     }
 
-    .content__meta-container--no-byline & {
-        border-top: 1px dotted $c-neutral5;
-        @include rem((
-            padding-top: $gs-baseline/3
-        ));
-    }
-
     @include mq(tablet) {
         padding-right: 0;
         @include fs-data(3, true);
@@ -302,9 +317,11 @@
     @include mq(leftCol) {
         @include rem((
             height: $gs-row-height,
-            padding-top: 2px,
+            padding-top: $gs-baseline/6,
             padding-bottom: $gs-baseline
         ));
+    }
+    @include mq($from: leftCol) {
         border-top: 1px dotted $c-neutral5;
     }
 
@@ -321,7 +338,7 @@
     width: gs-span(1);
     height: 60px; //Intentionally off grid
     @include rem((
-            margin: $gs-baseline/2 0
+        margin: $gs-baseline/2 0
     ));
     overflow: hidden;
     @include border-radius(50%);
@@ -332,7 +349,7 @@
         height: gs-span(2); //This is intentionally square
         margin-right: 0;
         @include rem((
-                margin-bottom: $gs-baseline,
+            margin-bottom: $gs-baseline,
         ));
     }
 }
@@ -354,28 +371,35 @@
     min-height: gs-height(1);
     position: relative;
     @include rem((
-            margin-bottom: $gs-baseline
+        margin-bottom: $gs-baseline
     ));
-    border-top: 1px dotted $c-neutral5;
-    border-bottom: 1px dotted $c-neutral5;
+    @include mq($to: leftCol) {
+        border-top: 1px dotted $c-neutral5;
+        border-bottom: 1px dotted $c-neutral5;
+    }
 
     @include mq(leftCol) {
         position: absolute;
         top: 0;
         @include rem((
-                margin-left: ($a-leftCol-width + $gs-gutter)*-1,
-                margin-bottom: ($gs-baseline/3)*4,
-                width: $a-leftCol-width
+            margin-left: ($a-leftCol-width + $gs-gutter)*-1,
+            margin-bottom: ($gs-baseline/3)*4,
+            width: $a-leftCol-width
         ));
-        border-top: 0;
-        border-bottom: 0;
     }
 
     @include mq(wide) {
         @include rem((
-                margin-left: (gs-span(3) + $gs-gutter)*-1,
-                width: gs-span(3)
+            margin-left: (gs-span(3) + $gs-gutter)*-1,
+            width: gs-span(3)
         ));
+    }
+}
+
+.content__meta-container--float {
+    @include mq(leftCol) {
+        float: left;
+        position: static;
     }
 }
 
@@ -453,6 +477,88 @@
     @include mq($to: tablet) {
         .has-localnav & {
             padding-top: 0;
+        }
+    }
+}
+
+.content__mobile-full-width {
+    @include mq($to: mobileLandscape) {
+        @include rem((
+            margin-left: -($gs-gutter/2),
+            margin-right: -($gs-gutter/2)
+        ));
+    }
+    @include mq($from: mobileLandscape, $to: tablet) {
+        @include rem((
+            margin-left: -$gs-gutter,
+            margin-right: -$gs-gutter
+        ));
+    }
+}
+
+.byline {
+    margin-bottom: 0;
+    @include fs-bodyHeading(1);
+    @include rem((
+        padding-top: $gs-baseline/3,
+        line-height: 20px
+    ));
+    color: $c-neutral2;
+
+    @include mq(tablet) {
+        @include fs-bodyHeading(2, true);
+        @include rem((
+            padding-right: gs-span(2),
+            line-height: 22px
+        ));
+    }
+
+    @include mq(leftCol) {
+        margin-bottom: 0;
+        padding-right: 0;
+        border-top: 1px dotted $c-neutral5;
+        @include rem((
+            min-height: gs-height(1),
+            padding-top: $gs-baseline/6,
+            padding-bottom: $gs-baseline
+        ));
+    }
+}
+
+.drop-cap {
+    float: left;
+    display: inline-block;
+    text-transform: uppercase;
+    @include f-headline;
+    font-weight: 200;
+    @include box-sizing(border-box);
+    @include rem((
+        height: 2*get-line-height($fs-bodyCopy, 3),
+        padding-top: 1px,
+        margin-right: 4px
+    ));
+
+    .drop-cap__inner {
+        display: inline-block;
+        vertical-align: text-top;
+        @include font-size(52px, 40px);
+    }
+}
+
+.drop-cap--wide {
+    @include mq($from: tablet) {
+        float: left;
+        display: inline-block;
+        text-transform: uppercase;
+        @include f-headline;
+        font-weight: 200;
+        @include rem((
+            margin-right: 5px,
+            height: 3*get-line-height($fs-bodyCopy, 3)
+        ));
+
+        .drop-cap__inner {
+            @include font-size(84px, 68px);
         }
     }
 }

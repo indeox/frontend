@@ -4,7 +4,7 @@ import common._
 import front._
 import model._
 import play.api.mvc._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, JsValue, Json}
 import views.support.{TemplateDeduping, NewsContainer}
 import scala.concurrent.Future
 import play.api.templates.Html
@@ -32,7 +32,9 @@ class FaciaController extends Controller with Logging with ExecutionContexts wit
   }
 
   def applicationsRedirect(path: String) = Action { implicit request =>
-    Ok.withHeaders("X-Accel-Redirect" -> (s"/applications/$path" + (if (request.isRss) "/rss" else "")))
+    Ok.withHeaders("X-Accel-Redirect" -> (s"/applications/$path" +
+      (if (request.isRss) "/rss" else "") +
+      (if (request.queryString.nonEmpty) s"?${request.rawQueryString}" else "")))
   }
 
   //Only used by dev-build for rending special urls such as lifeandstyle/home-and-garden
@@ -51,6 +53,12 @@ class FaciaController extends Controller with Logging with ExecutionContexts wit
       applicationsRedirect(path)
     else
       renderFrontPress(path)
+  }
+
+  def renderFrontJsonLite(path: String) = MemcachedAction{ implicit request =>
+    FrontJson.getAsJsValue(path).map{ json =>
+      Cached(60)(Ok(FrontJsonLite.get(json)))
+    }
   }
 
   def renderFrontPress(path: String) = MemcachedAction{ implicit request =>
