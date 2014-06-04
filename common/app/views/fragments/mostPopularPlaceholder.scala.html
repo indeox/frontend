@@ -1,4 +1,4 @@
-@(section: String, tone: String = "news")(implicit request: RequestHeader)
+ @(section: String, tone: String = "news")(implicit request: RequestHeader)
 
 @defining(Some(section).filter{ section => section.nonEmpty && !section.equals("global")}.map{ section => s"/most-read/$section" }.getOrElse("/most-read")){ url =>
     <div class="facia-container__inner">

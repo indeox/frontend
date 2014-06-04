@@ -4,7 +4,8 @@ import common.Edition
 import model.{Trail, Content}
 import scala.concurrent.Future
 import conf.ContentApi
-import feed.MostReadAgent
+import feed.{TopReferrersAgent, MostReadAgent}
+import com.gu.openplatform.contentapi.model.ItemResponse
 
 trait Related extends ConciergeRepository {
   def related(edition: Edition, path: String): Future[Seq[Trail]] = {

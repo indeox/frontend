@@ -4,19 +4,22 @@ define([
     'common/utils/mediator',
     'common/modules/analytics/mvt-cookie',
     'common/modules/experiments/searchText',
-    'common/modules/experiments/tests/high-relevance-commercial-component'
+    'common/modules/experiments/tests/high-relevance-commercial-component',
+    'common/modules/experiments/tests/display-referred-to-low-visiting-users'
 ], function (
     common,
     store,
     mediator,
     mvtCookie,
     ABHeaderSearchText,
-    ABHighRelevanceCommercialComponent
+    ABHighRelevanceCommercialComponent,
+    ABShowReferredContent
     ) {
 
     var TESTS = [
             new ABHeaderSearchText(),
-            new ABHighRelevanceCommercialComponent()
+            new ABHighRelevanceCommercialComponent(),
+            new ABShowReferredContent()
         ],
         participationsKey = 'gu.ab.participations';
 

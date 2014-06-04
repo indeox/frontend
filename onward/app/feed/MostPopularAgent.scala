@@ -47,7 +47,8 @@ object GeoMostPopularAgent extends Logging with ExecutionContexts {
 
   def refresh() {
     log.info("Refreshing most popular for countries.")
-    countries foreach update
+    //countries foreach update
+    update("GB")
   }
 
   def update(countryCode: String) {

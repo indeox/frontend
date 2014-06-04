@@ -17,7 +17,7 @@ define([
     //Modules
     'common/utils/storage',
     'common/utils/detect',
-    'common/modules/onward/popular',
+    'common/modules/onward/most-popular-component-factory',
     'common/modules/onward/related',
     'common/modules/onward/onward-content',
     'common/modules/ui/images',
@@ -72,7 +72,7 @@ define([
 
     storage,
     detect,
-    popular,
+    PopularComponentFactory,
     Related,
     Onward,
     images,
@@ -145,8 +145,9 @@ define([
         },
 
         transcludePopular: function () {
+            console.log("Hey you 1");
             mediator.on('page:common:ready', function(config, context) {
-                popular(config, context);
+                new PopularComponentFactory();
             });
         },
 
@@ -549,7 +550,7 @@ define([
             modules.initLightboxGalleries();
             modules.optIn();
             modules.displayReleaseMessage(config);
-            modules.logReadingHistory();
+            //modules.logReadingHistory();
             modules.unshackleParagraphs(config, context);
             modules.initAutoSignin(config);
             modules.loadTags(config);

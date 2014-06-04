@@ -82,7 +82,7 @@ class GuardianConfiguration(val application: String, val webappConfDirectory: St
   object ophanApi {
     lazy val key = configuration.getStringProperty("ophan.api.key")
     lazy val host = configuration.getStringProperty("ophan.api.host")
-    lazy val timeout = configuration.getIntegerProperty("content.api.timeout.millis").getOrElse(2000)
+    lazy val timeout = configuration.getIntegerProperty("content.api.timeout.millis").getOrElse(20000)
   }
 
   object ophan {
