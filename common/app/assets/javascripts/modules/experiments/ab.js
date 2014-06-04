@@ -6,23 +6,23 @@ define([
     'common/modules/experiments/tests/high-relevance-commercial-component',
     'common/modules/experiments/tests/hide-supporting-links',
     'common/modules/experiments/tests/across-the-guardian',
-    'common/modules/experiments/tests/display-referred-to-low-visiting-users'
+    'common/modules/experiments/tests/display-referred-content'
 ], function (
     common,
     store,
     mediator,
     mvtCookie,
-    ABHeaderSearchText,
     ABHighRelevanceCommercialComponent,
-    ABShowReferredContent,
-    ABHideSupportingLinks
-    ) {
+    ABHideSupportingLinks,
+    ABAcrossTheGuardian,
+    ABDisplayReferredContent
+) {
 
     var TESTS = [
             new ABHighRelevanceCommercialComponent(),
             new ABHideSupportingLinks(),
             new ABAcrossTheGuardian(),
-            new ABShowReferredContent()
+            new ABDisplayReferredContent()
         ],
         participationsKey = 'gu.ab.participations';
 

@@ -73,7 +73,7 @@ define([
 
     storage,
     detect,
-    PopularComponentFactory,
+    MostPopularComponentFactory,
     Related,
     Onward,
     images,
@@ -149,7 +149,7 @@ define([
         transcludePopular: function () {
             console.log("Hey you 1");
             mediator.on('page:common:ready', function(config, context) {
-                new PopularComponentFactory();
+                new MostPopularComponentFactory();
             });
         },
 

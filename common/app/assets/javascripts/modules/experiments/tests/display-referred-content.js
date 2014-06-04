@@ -7,6 +7,9 @@ define([
     ) {
 
     var DisplayReferredContent = function() {
+
+        var self = this;
+
         this.id = 'DisplayReferredContent';
         this.start = '2014=06-03';
         this.expiry = '2014-06-17';
