@@ -68,14 +68,6 @@ case class NewsContainer(showMore: Boolean = true) extends Container {
   val containerType = "news"
   val tone = "news"
 }
-case class SportContainer(showMore: Boolean = true) extends Container {
-  val containerType = "sport"
-  val tone = "news"
-}
-case class CommentContainer(showMore: Boolean = true) extends Container {
-  val containerType = "comment"
-  val tone = "comment"
-}
 case class CommentAndDebateContainer(showMore: Boolean = true) extends Container {
   val containerType = "commentanddebate"
   val tone = "comment"
@@ -869,33 +861,43 @@ object GetClasses {
     RenderClasses(classes:_*)
   }
 
-  def forSaucisson(trail: Trail, imageAdjust: String): String = {
+  def forSaucisson(trail: Trail): String = {
     val baseClasses: Seq[String] = Seq(
       "saucisson",
       s"tone-${trail.visualTone}",
       "tone-accent-border"
     )
-    val f: Seq[(Trail, String) => String] = Seq(
-      (trail: Trail, imageAdjust: String) =>
-        if (trail.isLive) "item--live" else "",
-      (trail: Trail, imageAdjust: String) =>
-        if (trail.trailPicture(5,3).isEmpty || imageAdjust == "hide"){
-          "saucisson--has-no-image"
-        }else{
-          "saucisson--has-image"
-        },
-      (trail: Trail, imageAdjust: String) =>
-        if (!trail.trailPicture(5,3).isEmpty) s"saucisson--imageadjust-$imageAdjust" else "",
-      (trail: Trail, imageAdjust: String) =>
-        if (trail.isCommentable) "saucisson--has-discussion" else "saucisson--has-no-discussion"
+    val f: Seq[(Trail) => String] = Seq(
+      (trail: Trail) =>
+        if (trail.isLive) "item--live" else ""
     )
-    val classes = f.foldLeft(baseClasses){case (cl, fun) => cl :+ fun(trail, imageAdjust)} ++ makeSnapClasses(trail)
+    val classes = f.foldLeft(baseClasses){case (cl, fun) => cl :+ fun(trail)} ++ makeSnapClasses(trail)
     RenderClasses(classes:_*)
   }
 
   def makeSnapClasses(trail: Trail): Seq[String] = trail match {
     case snap: Snap => "facia-snap" +: snap.snapCss.map(t => Seq(s"facia-snap--$t")).getOrElse(Seq("facia-snap--default"))
     case _  => Nil
+  }
+
+  def forContainer(container: Container, config: Config, index: Int, hasTitle: Boolean, extraClasses: Seq[String] = Nil): String = {
+    val baseClasses = Seq(
+      "container",
+      "container--row-pattern",
+      s"container--${container.containerType}"
+    ) ++ extraClasses
+    val f: Seq[(Container, Config, Int, Boolean) => String] = Seq(
+      (container: Container, config: Config, index: Int, hasTitle: Boolean) =>
+        if (config.isSponsored) "container--sponsored" else "",
+      (container: Container, config: Config, index: Int, hasTitle: Boolean) =>
+        if (config.isAdvertisementFeature && !config.isSponsored) "container--advertisement-feature" else "",
+      (container: Container, config: Config, index: Int, hasTitle: Boolean) =>
+        if (index == 0) "container--first" else "",
+      (container: Container, config: Config, index: Int, hasTitle: Boolean) =>
+        if (index > 0 && hasTitle) "js-container--toggle" else ""
+    )
+    val classes = f.foldLeft(baseClasses){case (cl, fun) => cl :+ fun(container, config, index, hasTitle)}
+    RenderClasses(classes:_*)
   }
 
 }
