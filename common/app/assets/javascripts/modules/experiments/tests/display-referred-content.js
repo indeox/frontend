@@ -1,14 +1,14 @@
 define([
-    'common/modules/onward/most-popular-component-factory',
-    'common/modules/onward/history'
+    'common/modules/onward/history',
+    'common/utils/mediator',
+    'common/modules/onward/most-popular-factory'
 ], function (
-    Factory,
-    History
+    History,
+    Mediator,
+    MostPopularFactory
     ) {
 
     var DisplayReferredContent = function() {
-
-        var self = this;
 
         this.id = 'DisplayReferredContent';
         this.start = '2014=06-03';
@@ -17,7 +17,7 @@ define([
         this.audience = '0.4';
         this.audienceOffset = '0.6';
 
-        this.canRun = function() { return true; }
+        this.canRun = function() { return true; };
 
         this.variants = [
             {
@@ -29,10 +29,8 @@ define([
                 test: function() {
                     var date = Date.now;
                     date.setMonth(date.getMonth()-1);
-                    console.log("++ Checking number of visits this month");
                     if( new History().hasVisitedInPeriodSince(date, 10)) {
-                        console.log("++ Showing referred");
-                        Factory.setShowReferred();
+                       MostPopularFactory.setShowReferred();
                     }
                 }
             }

@@ -12,25 +12,25 @@ define([
         Component
 ){
     function SocialBurners(config, context) {
-        register.begin('social-burner-content')
-        this.config = config;
+        register.begin('series-content');
+        this.config = extend(this.config, config);
         this.context = context;
-        this.endpoint = "/most-referred.json"
+        this.endpoint = '/most-referred.json';
 
         this.fetch(this.context, 'html');
     }
 
-    Component.define(SocialBurners)
+    Component.define(SocialBurners);
 
     SocialBurners.prototype.ready = function() {
         images.upgrade(this.context);
-        register.end('social-burner-content')
+        register.end('series-content');
     };
 
     SocialBurners.prototype.error = function() {
         common.mediator.emit('modules:error', 'Failed to load social burner content on page: ' + this.config.page.pageId + 'common/modules/onwards/related.js');
-        register.error('social-burner-content');
-    }
+        register.error('series-content');
+    };
 
 
     return SocialBurners;
