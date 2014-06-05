@@ -12,7 +12,7 @@ define([
         Component
 ){
     function SocialBurners(config, context) {
-        register.begin('series-content');
+        register.begin('social-content');
         this.config = extend(this.config, config);
         this.context = context;
         this.endpoint = '/most-referred.json';
@@ -24,12 +24,12 @@ define([
 
     SocialBurners.prototype.ready = function() {
         images.upgrade(this.context);
-        register.end('series-content');
+        register.end('social-content');
     };
 
     SocialBurners.prototype.error = function() {
         common.mediator.emit('modules:error', 'Failed to load social burner content on page: ' + this.config.page.pageId + 'common/modules/onwards/related.js');
-        register.error('series-content');
+        register.error('social-content');
     };
 
 

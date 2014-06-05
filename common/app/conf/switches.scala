@@ -333,7 +333,7 @@ object Switches extends Collections {
     safeState = Off, sellByDate = new DateMidnight(2014, 6, 25)
   )
 
-  val ABDisplayReferredContent = Switch("A/B Tests", "ab-display-referred-content",
+  val ABDisplayReferredContent = Switch("A/B Tests", "ab-display-social-burners",
     "If this switch is turned on, run the DisplayReferredContent A/B test",
     safeState = Off, sellByDate = new DateMidnight(2014, 6, 17)
   )
